@@ -12,7 +12,7 @@ class Solution {
             answer *= (map.get(key) + 1); // 조합 -> 안입는 경우도 고려하기 위해 + 1
         }
         
-        answer -= 1; // 모두 '안입음'일 경우 -1 해주기 
+        answer -= 1; // 모두 '안입음'일 경우 -1 해주기
         return answer;
     }
 }
