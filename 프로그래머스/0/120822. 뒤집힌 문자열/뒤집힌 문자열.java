@@ -1,7 +1,8 @@
-import java.util.*;
-
 class Solution {
     public String solution(String my_string) {
-        return new StringBuilder(my_string).reverse().toString();
+        String answer = "";
+        StringBuilder sb = new StringBuilder(my_string);
+        answer = sb.reverse().toString();
+        return answer;
     }
 }
