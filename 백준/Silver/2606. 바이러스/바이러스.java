@@ -1,51 +1,58 @@
 import java.util.*;
-
-class Main {
-    static int N; // 컴퓨터의 수
-    static int M; // 연결된 컴퓨터 쌍의 수
-    static ArrayList<Integer>[] A;
+import java.io.*;
+public class Main{
+    static int N, M;
+    static List<Integer>[] A;
     static boolean[] visited;
-    static int count = 0;
     
-    static public void main(String[] args) {
+    public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
+        
         N = sc.nextInt();
         M = sc.nextInt();
+        
         A = new ArrayList[N + 1];
         visited = new boolean[N + 1];
         
-        for(int i = 1; i <=N; i++) {
-            A[i] = new ArrayList<>();
+        for(int i = 0; i <= N; i++) {
+            A[i] = new ArrayList<Integer>();
         }
         
-        for(int i = 1; i <= M; i++) {
-            int s = sc.nextInt();
+        for(int i = 0; i < M; i++) {
+            int n = sc.nextInt();
             int v = sc.nextInt();
             
-            A[s].add(v);
-            A[v].add(s);
+            A[n].add(v);
+            A[v].add(n);
         }
         
+        //BFS
+        int count = BFS();
         
-        BFS(1);
         System.out.println(count);
+        
+        
+        sc.close();
+        return;
     }
     
-    static void BFS(int start) {
+    public static int BFS() {
         Queue<Integer> q = new LinkedList<>();
-        q.add(start);
-        visited[start] = true;
+        q.offer(1);
+        visited[1] = true;
+        int count = 0;
         
         while(!q.isEmpty()) {
             int now = q.poll();
             
-            for(int i : A[now]) {
-                if(!visited[i]) {
-                    visited[i] = true;
-                    count++;
-                    q.add(i);
-                }
+            for(int n : A[now]) {
+                if(visited[n]) continue;
+                q.offer(n);
+                visited[n] = true;
+                count++;
             }
         }
+        
+        return count;
     }
 }
