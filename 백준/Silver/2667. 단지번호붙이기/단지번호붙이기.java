@@ -21,12 +21,11 @@ public class Main{
             }
         }
 
- 
         for(int i = 0; i < N; i++) {
             for(int j = 0; j < N; j++) {
                 if(visited[i][j]) continue;
                 if(arr[i][j] == 0) continue;
-                answer.add(BFS(i, j));
+                answer.add(DFS(i, j));
             }
         }
         
@@ -35,31 +34,30 @@ public class Main{
         for(int n : answer) {
             System.out.println(n);
         }
+
         
         sc.close();
         return;
     }
     
-    public static int BFS(int _x, int _y) {
-        Queue<int[]> q = new LinkedList<>();
-        q.offer(new int[] {_x, _y});
+    public static int DFS(int _x, int _y) {
+        Stack<int[]> stack = new Stack<>();
+        stack.push(new int[] {_x, _y});
         visited[_x][_y] = true;
         int count = 1;
         
-        while(!q.isEmpty()) {
-            int[] now = q.poll();
+        while(!stack.isEmpty()) {
+            int[] now = stack.pop();
             
             for(int i = 0; i < 4; i++) {
                 int x = now[0] + dx[i];
                 int y = now[1] + dy[i];
                 
-                // ⭐ 경계 체크만 수정
                 if (x < 0 || x >= N || y < 0 || y >= N) continue;
+                if (visited[x][y]) continue;
+                if (arr[x][y] == 0) continue;   // ✅ 반드시 필요
                 
-                if(arr[x][y] == 0) continue;
-                if(visited[x][y]) continue;
-                
-                q.offer(new int[] {x, y});
+                stack.push(new int[] {x, y});
                 visited[x][y] = true;
                 count++;
             }
