@@ -1,41 +1,46 @@
 import java.util.*;
 import java.io.*;
 public class Main{
+    static int N;
+    static long[] arr;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
+
+        N = Integer.parseInt(br.readLine());
+        arr = new long[N];
         
         StringTokenizer st = new StringTokenizer(br.readLine());
-        long[] A = new long[N];
         for (int i = 0; i < N; i++) {
-            A[i] = Long.parseLong(st.nextToken());
+            arr[i] = Long.parseLong(st.nextToken());
         }
-        Arrays.sort(A);
+        
+        Arrays.sort(arr);
         
         int count = 0;
-        for(int k = 0; k < N; k++) {
-            long find = A[k];
-            int i = 0;
-            int j = N - 1;
-            while (i < j) {
-               if(A[i] + A[j] == find) {
-                   // find는 서로 다른 두 수의 합이어야 함을 체크
-                   if(i != k && j != k) {
-                       count++;
-                       break;
-                   }
-                   else if (i == k) {
-                       i++;
-                   }
-                   else if (j == k) {
-                       j--;
-                   }
-               }
-                else if (A[i] + A[j] > find) {
-                    j--;
+        for (int i = 0; i < N; i++) {
+            int start = 0;
+            int end = N - 1;
+            
+            while(start < end) {                
+                if (arr[i] == arr[start] + arr[end]) {
+                    if (start != i && end != i) {
+                        count++;
+                        break;
+                    }
+                    
+                    if (start == i) {
+                        start++;
+                    }
+                    
+                    else if (end == i) {
+                        end--;
+                    }
                 }
-                else
-                    i++;
+                 
+                else if (arr[start] + arr[end] > arr[i]) {
+                    end--;
+                }
+                else start++;
             }
         }
         
