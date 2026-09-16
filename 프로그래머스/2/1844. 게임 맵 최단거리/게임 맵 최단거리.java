@@ -1,53 +1,51 @@
 import java.util.*;
 
 class Solution {
+    
+    static int[] dr = {-1, 1, 0, 0};
+    static int[] dc = {0, 0, 1, -1};
+    
     static boolean[][] visited;
     static int[][] distances;
-    static int N, M;
-    
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, 1, -1};
     
     public int solution(int[][] maps) {
-        int answer = 0;
+        int answer = -1;
         
-        N = maps.length;
-        M = maps[0].length;
+        int n = maps.length;
+        int m = maps[0].length;
         
-        visited = new boolean[N][M];
-        distances = new int[N][M];
-    
-        BFS(0, 0, maps);
+        visited = new boolean[n][m];
+        distances = new int[n][m];
         
-        if (distances[N - 1][M - 1] == 0)
-            answer = -1;
-        else answer = distances[N - 1][M - 1];
-        
-        return answer;
-    }
-    
-    public static void BFS(int r, int c, int[][] maps) {
         Queue<int[]> q = new LinkedList<>();
-        q.add(new int[] {r, c});
-        visited[r][c] = true;
-        distances[r][c] = 1;
+        q.offer(new int[] {0, 0});
+        visited[0][0] = true;
+        distances[0][0] = 1;
         
         while(!q.isEmpty()) {
             int[] now = q.poll();
             
-            for(int i = 0; i < 4; i++) {
-                int nx = now[0] + dx[i];
-                int ny = now[1] + dy[i];
+            for (int i = 0; i < 4; i++) {
+                int nr = now[0] + dr[i];
+                int nc = now[1] + dc[i];
                 
-                if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
-
-                if (!visited[nx][ny] && maps[nx][ny] != 0) {
-                    q.offer(new int[] {nx, ny});
-                    visited[nx][ny] = true;
-                    distances[nx][ny] = distances[now[0]][now[1]] + 1;
-                }
+                // 범위 벗어나는 경우
+                if (nr < 0 || nc < 0 || nr >= n || nc >= m) continue;
+                
+                // 이미 방문한 경우
+                if (visited[nr][nc]) continue;
+                
+                // 벽인 경우
+                if (maps[nr][nc] == 0) continue;
+                
+                if (nr == n - 1 && nc == m - 1) return distances[now[0]][now[1]] + 1;
+                
+                q.offer(new int[] {nr, nc});
+                visited[nr][nc] = true;
+                distances[nr][nc] = distances[now[0]][now[1]] + 1;
             }
         }
-        
+                
+        return answer;
     }
 }
