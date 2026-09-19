@@ -2,88 +2,90 @@ import java.util.*;
 
 class Solution {
     static int[][] map;
-    static int itemX, itemY;
     
-    static int[] dr = {-1, 1, 0, 0};
-    static int[] dc = {0, 0, 1, -1};
+    static int characterX;
+    static int characterY;
+    
+    static int itemX;
+    static int itemY;
+    
+    static int[] dr = {0, 1, 0, -1};
+    static int[] dc = {-1, 0, 1, 0};
     
     static boolean[][] visited;
-    static int[][] distance;
+    static int[][] distances;
     
     public int solution(int[][] rectangle, int characterX, int characterY, int itemX, int itemY) {
+        int answer = 0;
         
         map = new int[101][101];
+        visited = new boolean[101][101];
+        distances = new int[101][101];
+        
+        this.characterX = characterX * 2;
+        this.characterY = characterY * 2;
         
         this.itemX = itemX * 2;
         this.itemY = itemY * 2;
         
-        visited = new boolean[101][101];
-        distance = new int[101][101];
-        
-        for (int[] rect : rectangle) {
-            int x1 = rect[0] * 2;
-            int y1 = rect[1] * 2;
-            int x2 = rect[2] * 2;
-            int y2 = rect[3] * 2;
+        // 직사각형 1로 채우기
+        for (int i = 0; i < rectangle.length; i++) {
+            int x1 = rectangle[i][0] * 2;
+            int y1 = rectangle[i][1] * 2;
+            int x2 = rectangle[i][2] * 2;
+            int y2 = rectangle[i][3] * 2;
             
-            // 1. 모든 직사각형 영역 칠하기
-            for (int x = x1; x <= x2; x++) {
-                for (int y = y1; y <= y2; y++) {
-                    map[x][y] = 1;
+            for (int r = x1; r <= x2; r++) {
+                for (int c = y1; c <= y2; c++) {
+                    map[r][c] = 1;
                 }
             }
         }
         
-        for (int[] rect : rectangle) {
-            int x1 = rect[0] * 2;
-            int y1 = rect[1] * 2;
-            int x2 = rect[2] * 2;
-            int y2 = rect[3] * 2;
+        // 내부 0 으로 채우기
+        for (int i = 0; i < rectangle.length; i++) {
+            int x1 = rectangle[i][0] * 2;
+            int y1 = rectangle[i][1] * 2;
+            int x2 = rectangle[i][2] * 2;
+            int y2 = rectangle[i][3] * 2;
             
-            // 2. 내부만 지우기
-            for (int x = x1 + 1; x < x2; x++) {
-                for (int y = y1 + 1; y < y2; y++) {
-                    map[x][y] = 0;
+            for (int r = x1 + 1; r < x2; r++) {
+                for (int c = y1 + 1; c < y2; c++) {
+                    map[r][c] = 0;
                 }
             }
         }
         
-        characterX *= 2;
-        characterY *= 2;   
+        BFS(this.characterX, this.characterY);
         
-        bfs(characterX, characterY);
         
-        return distance[this.itemX][this.itemY] / 2;
+        return distances[this.itemX][this.itemY] / 2;
     }
     
-    private static void bfs(int x, int y) {
+    private static void BFS(int r, int c) {
         Queue<int[]> q = new LinkedList<>();
-        q.add(new int[] {x, y});
-        visited[x][y] = true;
+        q.add(new int[] {r, c});
+        visited[r][c] = true;
         
         while(!q.isEmpty()) {
             int[] now = q.poll();
             
-            if (now[0] == itemX && now[1] == itemY) break;
+            if (now[0] == itemX && now[1] == itemY) 
+                break;
             
             for (int i = 0; i < 4; i++) {
-                int nr = now[0] + dr[i];
-                int nc = now[1] + dc[i];
+                int nx = now[0] + dr[i];
+                int ny = now[1] + dc[i];
                 
+                if (nx < 0 || ny < 0 || nx >= 101 || ny >= 101) continue;
+                if (visited[nx][ny]) continue;
+                if (map[nx][ny] != 1) continue;
                 
-                if (nr < 0 || nc < 0 || nr >= 101 || nc >= 101) continue;
-                
-                if (visited[nr][nc]) continue;
-                
-                // 1만 길이라서 1이 아니면 pass
-                if (map[nr][nc] != 1) continue;
-                
-                q.add(new int[] {nr, nc});
-                visited[nr][nc] = true;
-                distance[nr][nc] = distance[now[0]][now[1]] + 1;
+                q.add(new int[] {nx, ny});
+                visited[nx][ny] = true;
+                distances[nx][ny] = distances[now[0]][now[1]] + 1;
             }
         }
-        
         
     }
 }
