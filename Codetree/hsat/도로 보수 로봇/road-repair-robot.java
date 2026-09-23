@@ -1,56 +1,57 @@
-import java.util.*;
-
+import java.util.Scanner;
 public class Main {
-    static int N;
-    static int K;
+
+    static int N, K;
     static int[] positions;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         N = scanner.nextInt();
         K = scanner.nextInt();
-        positions = new int[N]; // 구멍 위치
-
+        positions = new int[N];
         for (int i = 0; i < N; i++) {
             positions[i] = scanner.nextInt();
         }
+        // Please write your code here.
+
+        int answer = 0;
 
         int left = 1;
-        int right = positions[N - 1] - positions[0] + 1;
-        int len = 0;
+        int right = positions[N - 1];
+
         while (left <= right) {
             int mid = (left + right) / 2;
 
             if (possible(mid)) {
                 right = mid - 1;
-                len = mid;
-            }
-
+                answer = mid;
+            } 
             else {
                 left = mid + 1;
             }
-
         }
 
-        System.out.println(len);
-
+        System.out.println(answer);
     }
 
-    public static boolean possible(int len) {
-        int count = 0;
+    static boolean possible(int mid) {
         
-        int num = 0;
-        for (int i = 0; i < positions.length; i++) {
-            if (positions[i] < num) {
+        int idx = 0;
+        int count = 0;
+
+        int i = 0;
+
+        while(idx < N) {
+
+            if (i >= positions[idx]) {
+                idx++;
                 continue;
             }
 
-            num = positions[i];
-            
-            // 방문
-            num += len;
-                        
+            i = positions[idx];
+            i += mid - 1;
             count++;
+            idx++;
         }
 
         return count <= K;
