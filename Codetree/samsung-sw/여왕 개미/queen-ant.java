@@ -76,7 +76,7 @@ public class Main {
         
         // 이분 탐색 + 그리디
         int left = 0;
-        int right = 1_000_000_000;
+        int right = alive.get(alive.size() - 1) - alive.get(1);
         int answer = 0;
 
         while (left <= right) {
